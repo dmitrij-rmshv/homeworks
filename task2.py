@@ -1,14 +1,22 @@
-# 2. Создать текстовый файл (не программно), сохранить в нем несколько строк,
-# выполнить подсчет количества строк, количества слов в каждой строке.
+# 2. Реализовать класс Road (дорога), в котором определить атрибуты: length (длина), width (ширина).
+# Значения данных атрибутов должны передаваться при создании экземпляра класса. Атрибуты сделать защищенными.
+# Определить метод расчета массы асфальта, необходимого для покрытия всего дорожного полотна.
+# Использовать формулу: длина * ширина * масса асфальта для покрытия одного кв метра дороги асфальтом,
+# толщиной в 1 см * число см толщины полотна. Проверить работу метода.
+# Например: 20м * 5000м * 25кг * 5см = 12500 т
 
-new_f = open("new_file.txt", encoding="utf-8")  # open file from task #1
-line_num = 0
-while True:
-    line_words = len(new_f.readline().split())
-    if line_words == 0:
-        break
-    else:
-        line_num +=1
-        print(f'line {line_num} contains {line_words} words')
-new_f.close()
-print(f'\nTotal lines count: {line_num}')
+
+class Road:
+
+    def __init__(self, length, width):
+        self._length = length
+        self._width = width
+
+    def massa(self, consumption=25, thickness=5):
+        self.consumption = consumption
+        self.thickness = thickness
+        return self._width * self._length * self.consumption * self.thickness / 1000
+
+
+a = Road(5000, 20)
+print(a.massa())
