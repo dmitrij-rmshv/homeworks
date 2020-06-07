@@ -1,37 +1,70 @@
-# 3. Реализовать базовый класс Worker (работник), в котором определить атрибуты: name, surname, position (должность),
-# income (доход). Последний атрибут должен быть защищенным и ссылаться на словарь, содержащий элементы: оклад и премия,
-# например, {"wage": wage, "bonus": bonus}. Создать класс Position (должность) на базе класса Worker.
-# В классе Position реализовать методы получения полного имени сотрудника (get_full_name)
-# и дохода с учетом премии (get_total_income).
-# Проверить работу примера на реальных данных (создать экземпляры класса Position, передать данные,
-# проверить значения атрибутов, вызвать методы экземпляров).
-
-class Worker:
-
-    def __init__(self, name, family, post, salary, prize):
-        self.name = name
-        self.surname = family
-        self.position = post
-        self._income = {"wage": salary, "bonus": prize}
-
-
-class Position(Worker):
-
-    def __init__(self, name, family, post, salary, prize):
-        super().__init__(name, family, post, salary, prize)
-
-    def get_full_name(self):
-        return self.name + ' ' + self.surname
-
-    def get_total_income(self):
-        return self._income.get("wage") + self._income.get("bonus")
+# 3. Реализовать программу работы с органическими клетками. Необходимо создать класс Клетка. В его конструкторе
+# инициализировать параметр, соответствующий количеству клеток (целое число). В классе должны быть реализованы методы
+# перегрузки арифметических операторов: сложение (__add__()), вычитание (__sub__()), умножение (__mul__()),
+# деление (__truediv__()).Данные методы должны применяться только к клеткам и выполнять увеличение, уменьшение,
+# умножение и обычное (не целочисленное) деление клеток, соответственно. В методе деления должно осуществляться
+# округление значения до целого числа.
+# Сложение. Объединение двух клеток. При эт. число ячеек общей клетки должно равняться сумме ячеек исходных двух клеток
+# Вычитание. Участвуют две клетки. Операцию необходимо выполнять только если разность количества ячеек двух клеток
+# больше нуля, иначе выводить соответствующее сообщение.
+# Умножение. Создается общая клетка из двух. Число ячеек общей клетки определяется как произведение количества ячеек
+# этих двух клеток.
+# Деление. Создается общая клетка из двух. Число ячеек общей клетки определяется как целочисленное деление количества
+# ячеек этих двух клеток.
+# В классе необходимо реализовать метод make_order(), принимающий экземпляр класса и количество ячеек в ряду.
+# Данный метод позволяет организовать ячейки по рядам.
+# Метод должен возвращать строку вида *****\n*****\n*****..., где количество ячеек между \n равно переданному аргументу
+# Если ячеек на формирование ряда не хватает, то в последний ряд записываются все оставшиеся.
+# Например, количество ячеек клетки равняется 12, количество ячеек в ряду — 5. Тогда метод make_order() вернет
+# строку: *****\n*****\n**.
+# Или, количество ячеек клетки равняется 15, количество ячеек в ряду — 5. Тогда метод make_order() вернет
+# строку: *****\n*****\n*****.
 
 
-pos = Position('Vasia', 'Pupkin', 'developer', 25000, 5000)
-posi = Position('Condoleezza', 'Rice', 'Secretary of State', 32000, 6000)
+class Cell:
 
-print(pos.name, pos.surname, pos.position, pos._income)
-print(f'{pos.get_full_name()} is a {pos.position} with an income of {pos.get_total_income()}')
+    def __init__(self, num_cells):
+        self.num_sells = num_cells
 
-print(posi.name, posi.surname, posi.position, posi._income)
-print(f'{posi.get_full_name()} is a {posi.position} with an income of {posi.get_total_income()}')
+    def __add__(self, other):
+        return Cell(self.num_sells + other.num_sells)
+
+    def __sub__(self, other):
+        """
+        Логику здесь реализовал в соответствии с буквой задания, как я её понял.
+        Но она отличается от того, что вы озвучили.
+        Разницу клеток представил в абсолютном виде.
+        """
+        diff = self.num_sells - other.num_sells
+        return Cell(abs(diff)) if diff != 0 else Cell('Operation impossible: cells are equal')
+
+    def __mul__(self, other):
+        return Cell(self.num_sells * other.num_sells)
+
+    def __truediv__(self, other):
+        """
+        А здесь вроде получилось удовлетворить и задание и вас.
+        """
+        div = round(self.num_sells / other.num_sells)
+        return Cell(div) if div > 0 else Cell('Operation impossible: dividing the smaller by the larger')
+
+    def make_order(self, row_sells):
+        i, f = divmod(self.num_sells, row_sells)
+        return ('*' * row_sells + '\n') * i + '*' * f
+
+
+my_cell_1 = Cell(57)
+my_cell_2 = Cell(21)
+my_cell_3 = Cell(57)
+
+print(f'Created cells are : {my_cell_1.num_sells}; {my_cell_2.num_sells}; {my_cell_3.num_sells}.')
+
+print((my_cell_1 + my_cell_2).num_sells)
+print((my_cell_1 - my_cell_2).num_sells)
+print((my_cell_1 - my_cell_3).num_sells)
+print((my_cell_1 * my_cell_2).num_sells)
+print((my_cell_1 / my_cell_2).num_sells)
+print((my_cell_2 / my_cell_3).num_sells)
+
+print(my_cell_1.make_order(9))
+print(my_cell_2.make_order(7))
