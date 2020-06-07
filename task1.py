@@ -1,38 +1,30 @@
-# 1. Реализовать класс Matrix (матрица). Обеспечить перегрузку конструктора класса (метод __init__()), который должен
-# принимать данные (список списков) для формирования матрицы.
-# Подсказка: матрица — система некоторых математических величин, расположенных в виде прямоугольной схемы.
-# Примеры матриц вы найдете в методичке.
-# Следующий шаг — реализовать перегрузку метода __str__() для вывода матрицы в привычном виде.
-# Далее реализовать перегрузку метода __add__() для реализации операции сложения двух объектов класса Matrix
-# (двух матриц). Результатом сложения должна быть новая матрица.
-# Подсказка: сложение элементов матриц выполнять поэлементно — первый элемент первой строки первой матрицы складываем
-# с первым элементом первой строки второй матрицы и т.д.
+# 1. Реализовать класс «Дата», функция-конструктор которого должна принимать дату в виде строки формата «день-мес-год».
+# В рамках класса реализовать два метода. Первый, с декоратором @classmethod, должен извлекать число, месяц, год и
+# преобразовывать их тип к типу «Число». Второй, с декоратором @staticmethod, должен проводить валидацию числа, месяца
+# и года (например, месяц — от 1 до 12). Проверить работу полученной структуры на реальных данных.
 
 
-class Matrix:
+class Date:
 
-    def __init__(self, m_list):
-        self.m_list = m_list
+    def __init__(self, date_str):
+        try:
+            self.day, self.month, self.year = Date.extract(date_str)
+            print(f'day of the month: {self.day}; month: {self.month}, year: {self.year}')
+        except TypeError:
+            print('Date invalid')
 
-    def __str__(self):
-        string = ''
-        for row in self.m_list:
-            for col in row:
-                string += f'{col:5}'
-            string += '\n'
-        return string
+    @classmethod
+    def extract(cls, date_str):
+        day, month, year = map(int, date_str.split('-'))
+        if Date.is_valid(day, month, year):
+            return day, month, year
 
-    def __add__(self, other):
-        return Matrix([self.m_list[row][col] + other.m_list[row][col]
-                       for col, el in enumerate(self.m_list[row])]
-                      for row, el in enumerate(self.m_list))
+    @staticmethod
+    def is_valid(day, month, year):
+        if day < 1 or day > 31 or month < 1 or month > 12 or year < 1 or year > 2222:
+            return False
+        else:
+            return True
 
 
-my_matrix_1 = Matrix([[31, 22], [37, 43], [51, 86]])
-my_matrix_2 = Matrix([[3, 5], [2, 4], [-1, 64]])
-
-print(my_matrix_1)
-
-print(my_matrix_2)
-
-print(my_matrix_1 + my_matrix_2)
+my_date = Date('22-13-1995')

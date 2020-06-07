@@ -1,44 +1,25 @@
-# 2. Реализовать проект расчета суммарного расхода ткани на производство одежды. Основная сущность (класс) этого
-# проекта — одежда, которая может иметь определенное название. К типам одежды в этом проекте относятся пальто и костюм.
-# У этих типов одежды существуют параметры: размер (для пальто) и рост (для костюма). Это могут быть обычные
-# числа: V и H, соответственно.
-# Для определения расхода ткани по каждому типу одежды использовать формулы: для пальто (V/6.5 + 0.5),
-# для костюма (2 * H + 0.3). Проверить работу этих методов на реальных данных.
-# Реализовать общий подсчет расхода ткани. Проверить на практике полученные на этом уроке знания: реализовать
-# абстрактные классы для основных классов проекта, проверить на практике работу декоратора @property.
+# 2. Создайте собственный класс-исключение, обрабатывающий ситуацию деления на нуль. Проверьте его работу на данных,
+# вводимых пользователем. При вводе пользователем нуля в качестве делителя программа должна корректно обработать эту
+# ситуацию и не завершиться с ошибкой.
 
 
-from abc import ABC, abstractmethod
+class DelenieNaNullError(Exception):
+
+    def __init__(self, txt):
+        self.txt = txt
 
 
-class Clothes(ABC):
-    @abstractmethod
-    def fabrics_used(self):
-        pass
+inp_divisible = input("Введите делимое: ")
+inp_divisor = input("Введите делитель: ")
 
-
-class Coat(Clothes):
-
-    def __init__(self, size):
-        self.v = size
-
-    @property
-    def fabrics_used(self):
-        return self.v / 6.5 + 0.5
-
-
-class Suit(Clothes):
-
-    def __init__(self, size):
-        self.h = size
-
-    @property
-    def fabrics_used(self):
-        return 2 * self.h + 0.3
-
-
-my_coat = Coat(56)
-my_suit = Suit(189)
-
-print(f'The coat requires {my_coat.fabrics_used:.2f} m of fabric')
-print(f'The suit requires {my_suit.fabrics_used:.2f} m of fabric')
+try:
+    divisible = int(inp_divisible)
+    divisor = int(inp_divisor)
+    if divisor == 0:
+        raise DelenieNaNullError("Вы ввели недопустимый делитель - ноль!")
+except ValueError:
+    print("Вы ввели не число")
+except DelenieNaNullError as err:
+    print(err)
+else:
+    print(f"Все хорошо. Ваше число: {divisible / divisor:.2f}")
